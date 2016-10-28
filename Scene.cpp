@@ -6,6 +6,7 @@ void Scene::ReadScene(int argc, char** argv) {
     int N;
     std::string empty;
     int a, b, c;
+    double d;
     int vid1, vid2, vid3;
 
     // read reflect depth
@@ -56,14 +57,14 @@ void Scene::ReadScene(int argc, char** argv) {
             c = material_id_to_idx[c]; // material idx
             for(int j = 0; j < b; j++) {
                 str >> vid1 >> vid2 >> vid3; //
-                surfaces.push_back((Surface*)(new Triangle(vid1-1, vid2-1, vid3-1, c)));
+                surfaces.push_back((Surface*)(new Triangle(vid1-1, vid2-1, vid3-1, c, &vertices)));
             }
         } else if (str == "#Sphere") {
             str >> b; //material id;
             b = material_id_to_idx[b] // material idx
-            str >> c; //radius
+            str >> d; //radius
             str >> vid1; // center
-            surfaces.push_back((Surface*)(new Sphere(vid1-1, c, b)));
+            surfaces.push_back((Surface*)(new Sphere(vid1-1, d, b, &vertices)));
         }
     }
     
@@ -71,5 +72,5 @@ void Scene::ReadScene(int argc, char** argv) {
 }
 
 void Scene::GenerateKDTree() {
-    
+    KDTree.generateTree(vertices, surfaces);
 }

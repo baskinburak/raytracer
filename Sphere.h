@@ -1,15 +1,16 @@
 #ifndef ODEV_SPHERE
 #define ODEV_SPHERE
 
+#include "Surface.h"
 
 class Sphere : public Surface{
 
 public:
+    std::vector<Vector3>* vertices;
     int center;
-    int radius;
-    Sphere():center(-1), radius(-1), type(false), material(-1) {}
-    Sphere(int c, int r, int m): center(c), radius(r), type(false), material(m) {}
-    bool Intersect(const Ray& ray, RayHitInfo& hitInfo) const;
+    double radius;
+    Sphere():center(-1), radius(-1), type(false), material(-1), vertices(NULL), bbox(NULL) {}
+    Sphere(int c, double r, int m, std::vector<Vector3>* vert): center(c), radius(r), type(false), material(m), vertices(vert), bbox(NULL) {}
 };
 
 

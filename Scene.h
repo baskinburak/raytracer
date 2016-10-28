@@ -3,11 +3,10 @@
 
 #include <vector>
 #include "Camera.h"
-#include "Sphere.h"
-#include "Mesh.h"
+#include "Surface.h"
 #include "Color.h"
 #include "PointLight.h"
-#include "Vertex.h"
+#include "Vector3.h"
 
 class Scene {
 
@@ -21,6 +20,8 @@ public:
     int reflectDepth;
     Color backgroundColor;
     Intensity ambientLightIntensity;
+
+    KDTree tree;
 
     void ReadScene(int argc, char** argv);
 
