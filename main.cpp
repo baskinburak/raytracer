@@ -14,14 +14,13 @@ int main(int argc, char** argv)
 
     CurrentScene.ReadScene(argc, argv);
 
-    /*for (const auto& camera : CurrentScene->Cameras())
+    for (const auto& camera : CurrentScene.cameras)
     {
-        Image img = camera.Render();
 
-        std::ofstream out(camera.OutputFile());
-
+        Image img = camera.Render(&CurrentScene);
+        std::ofstream out(camera.outputFile);
         out << img;
-    }*/
+    }
 
     return 0;
 }

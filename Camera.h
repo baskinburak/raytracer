@@ -1,39 +1,30 @@
-#ifndef RAYTRACER_CAMERA_H
-#define RAYTRACER_CAMERA_H
+#ifndef ODEV_KAMERA
+#define ODEV_KAMERA
 
 #include "Vector3.h"
 #include "Image.h"
 
 class Camera {
-    struct {
-        Vector3 Forward, Up, Left;
-    } _space;
+    public:
+        Vector3 position;
+        Vector3 gaze;
+        Vector3 up;
+        
+        struct {
+            float left, right, bottom, top;
+            float distance;
 
-    struct {
-        float Left, Right, Bottom, Top;
-        float Distance;
+            int width;
+            int height;
 
-        int Width;
-        int Height;
+        } imagePlane;
 
-    } _imagePlane;
+        std::string outputFile;
+        Image Render(Scene* currentScene) const;
 
-    Vector3 _position;
-    Vector3 _gaze;
+        friend std::istream& operator>>(std::istream& stream, Camera& camera);
 
-    std::string _outputFile;
 
-public:
-
-    /*
-     * BEWARE! You should render each camera by using this function, we will grade it according to regulations!
-     */
-    Image Render() const;
-
-    const std::string& OutputFile() const
-    {
-        return _outputFile;
-    }
 };
 
-#endif //RAYTRACER_CAMERA_H
+#endif

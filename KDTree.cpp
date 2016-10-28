@@ -1,5 +1,7 @@
 #include "KDTree.h"
 #include <iostream>
+#include <stack>
+
 int KDTree::extendBoundingBox(BoundingBox* target, BoundingBox* source) {
     int extend_count = 0;
 
@@ -28,67 +30,73 @@ Vector3 centerOfMass(std::vector<Surface*>& surfaces) {
     return com;
 }
 
-void KDTree::divide(KDNode* node) {
-    Vector3 center = centerOfMass(node->surfaces);
-    KDNode* left = new KDNode();
-    KDNode* right = new KDNode();
+void KDTree::divide(KDNode* root) {
 
-    Vector3& tr = (node->box).topright;
-    Vector3& bl = (node->box).bottomleft;
+    std::stack<KDNode*> stk;
+    stk.push(root);
+    while(!stk.empty()) {
+        KDNode* node = stk.top();
+        stk.pop();
+        Vector3 center = centerOfMass(node->surfaces);
+        KDNode* left = new KDNode();
+        KDNode* right = new KDNode();
 
-    BoundingBox left_box = (node->box);
-    BoundingBox right_box = (node->box);
+        Vector3& tr = (node->box).topright;
+        Vector3& bl = (node->box).bottomleft;
 
-    int x_diff = tr.X - bl.X;
-    int y_diff = tr.Y - bl.Y;
-    int z_diff = tr.Z - bl.Z;
+        BoundingBox left_box = (node->box);
+        BoundingBox right_box = (node->box);
 
-    int extend_count = 0;
+        double x_diff = tr.X - bl.X;
+        double y_diff = tr.Y - bl.Y;
+        double z_diff = tr.Z - bl.Z;
 
-    if(x_diff > y_diff && x_diff > z_diff) {
-        left_box.topright.X = center.X;
-        right_box.bottomleft.X = center.X;
-        for(int i=0; i<(node->surfaces).size(); i++) {
-            if((((node->surfaces)[i])->center()).X < center.X) {
-                extend_count += extendBoundingBox(&left_box, ((node->surfaces)[i])->getBoundingBox());
-                (left->surfaces).push_back((node->surfaces)[i]);
-            } else {
-                extend_count += extendBoundingBox(&right_box, ((node->surfaces)[i])->getBoundingBox());
-                (right->surfaces).push_back((node->surfaces)[i]);
+        int extend_count = 0;
+
+        if(x_diff > y_diff && x_diff > z_diff) {
+            left_box.topright.X = center.X;
+            right_box.bottomleft.X = center.X;
+            for(int i=0; i<(node->surfaces).size(); i++) {
+                if((((node->surfaces)[i])->center()).X < center.X) {
+                    extend_count += extendBoundingBox(&left_box, ((node->surfaces)[i])->getBoundingBox());
+                    (left->surfaces).push_back((node->surfaces)[i]);
+                } else {
+                    extend_count += extendBoundingBox(&right_box, ((node->surfaces)[i])->getBoundingBox());
+                    (right->surfaces).push_back((node->surfaces)[i]);
+                }
+            }
+        } else if(y_diff > z_diff) {
+            left_box.topright.Y = center.Y;
+            right_box.bottomleft.Y = center.Y;
+            for(int i=0; i<(node->surfaces).size(); i++) {
+                if((((node->surfaces)[i])->center()).Y < center.Y) {
+                    extend_count += extendBoundingBox(&left_box, ((node->surfaces)[i])->getBoundingBox());
+                    (left->surfaces).push_back((node->surfaces)[i]);
+                } else {
+                    extend_count += extendBoundingBox(&right_box, ((node->surfaces)[i])->getBoundingBox());
+                    (right->surfaces).push_back((node->surfaces)[i]);
+                }
+            }
+        } else {
+            left_box.topright.Z = center.Z;
+            right_box.bottomleft.Z = center.Z;
+            for(int i=0; i<(node->surfaces).size(); i++) {
+                if((((node->surfaces)[i])->center()).Z < center.Z) {
+                    extend_count += extendBoundingBox(&left_box, ((node->surfaces)[i])->getBoundingBox());
+                    (left->surfaces).push_back((node->surfaces)[i]);
+                } else {
+                    extend_count += extendBoundingBox(&right_box, ((node->surfaces)[i])->getBoundingBox());
+                    (right->surfaces).push_back((node->surfaces)[i]);
+                }
             }
         }
-    } else if(y_diff > z_diff) {
-        left_box.topright.Y = center.Y;
-        right_box.bottomleft.Y = center.Y;
-        for(int i=0; i<(node->surfaces).size(); i++) {
-            if((((node->surfaces)[i])->center()).Y < center.Y) {
-                extend_count += extendBoundingBox(&left_box, ((node->surfaces)[i])->getBoundingBox());
-                (left->surfaces).push_back((node->surfaces)[i]);
-            } else {
-                extend_count += extendBoundingBox(&right_box, ((node->surfaces)[i])->getBoundingBox());
-                (right->surfaces).push_back((node->surfaces)[i]);
-            }
-        }
-    } else {
-        left_box.topright.Z = center.Z;
-        right_box.bottomleft.Z = center.Z;
-        for(int i=0; i<(node->surfaces).size(); i++) {
-            if((((node->surfaces)[i])->center()).Z < center.Z) {
-                extend_count += extendBoundingBox(&left_box, ((node->surfaces)[i])->getBoundingBox());
-                (left->surfaces).push_back((node->surfaces)[i]);
-            } else {
-                extend_count += extendBoundingBox(&right_box, ((node->surfaces)[i])->getBoundingBox());
-                (right->surfaces).push_back((node->surfaces)[i]);
-            }
-        }
+
+        left->box = left_box;
+        right->box = right_box;
+        if(extend_count * 2 > (node->surfaces).size() || (left->surfaces).size() < 5 || (right->surfaces).size() < 5) continue;
+        stk.push(left);
+        stk.push(right);
     }
-
-    left->box = left_box;
-    right->box = right_box;
-
-    if(extend_count*2 > (node->surfaces).size()) return;
-    divide(left);
-    divide(right);
 
 }
 
@@ -104,6 +112,5 @@ void KDTree::generateTree(std::vector<Vector3>& vertices, std::vector<Surface*> 
     root = new KDNode(*bb, surfaces);
 
     divide(root);
-    std::cout << "divide done" << std::endl;
 
 }

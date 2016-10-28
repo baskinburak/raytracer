@@ -4,7 +4,10 @@
 #include "Triangle.h"
 #include "Sphere.h"
 #include <iostream>
+#include "Vector3.h"
+
 void Scene::ReadScene(int argc, char** argv) {
+    // start readin scene
     std::ifstream str(argv[1]);
 
     int N;
@@ -71,6 +74,16 @@ void Scene::ReadScene(int argc, char** argv) {
         }
     }
     GenerateKDTree();
+
+
+    // start reading cameras
+    str = std::ifstream(argv[2]);
+    
+    str >> N;
+    cameras.resize(N);
+    for(int i=0; i < N; i++) {
+        str >> cameras[i];
+    }
     
 }
 
