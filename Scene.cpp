@@ -3,6 +3,7 @@
 #include <fstream>
 #include "Triangle.h"
 #include "Sphere.h"
+#include <iostream>
 void Scene::ReadScene(int argc, char** argv) {
     std::ifstream str(argv[1]);
 
@@ -19,10 +20,8 @@ void Scene::ReadScene(int argc, char** argv) {
     // read background color
     str >> backgroundColor;
 
-
     // read ambient light instensity
     str >> ambientLightIntensity;
-
 
     // read point lights
     str >> N;
@@ -45,6 +44,7 @@ void Scene::ReadScene(int argc, char** argv) {
     // read vertices
     str >> N;
     vertices.resize(N);
+    str >> empty >> empty;
     for(int i=0; i < N; i++) {
         str >> vertices[i];
     }
@@ -70,8 +70,8 @@ void Scene::ReadScene(int argc, char** argv) {
             surfaces.push_back((Surface*)(new Sphere(vid1-1, d, b, &vertices)));
         }
     }
-    
     GenerateKDTree();
+    
 }
 
 void Scene::GenerateKDTree() {

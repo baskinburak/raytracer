@@ -1,5 +1,5 @@
 #include "KDTree.h"
-
+#include <iostream>
 int KDTree::extendBoundingBox(BoundingBox* target, BoundingBox* source) {
     int extend_count = 0;
 
@@ -29,7 +29,6 @@ Vector3 centerOfMass(std::vector<Surface*>& surfaces) {
 }
 
 void KDTree::divide(KDNode* node) {
-
     Vector3 center = centerOfMass(node->surfaces);
     KDNode* left = new KDNode();
     KDNode* right = new KDNode();
@@ -87,9 +86,7 @@ void KDTree::divide(KDNode* node) {
     left->box = left_box;
     right->box = right_box;
 
-
     if(extend_count*2 > (node->surfaces).size()) return;
-
     divide(left);
     divide(right);
 
@@ -104,9 +101,9 @@ void KDTree::generateTree(std::vector<Vector3>& vertices, std::vector<Surface*> 
         BoundingBox* bbox = surf->getBoundingBox();
         extendBoundingBox(bb, bbox);
     }
-
     root = new KDNode(*bb, surfaces);
 
     divide(root);
+    std::cout << "divide done" << std::endl;
 
 }
