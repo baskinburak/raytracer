@@ -7,6 +7,8 @@
 #include "Color.h"
 #include "PointLight.h"
 #include "Vector3.h"
+#include "Material.h"
+#include "KDTree.h"
 
 class Scene {
 

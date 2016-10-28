@@ -6,8 +6,8 @@ class BoundingBox {
     public:
         Vector3 bottomleft;
         Vector3 topright;
-        BoundingBox(): bottomleft(), topright() {}
+        BoundingBox(): bottomleft(Vector3()), topright(Vector3()) {}
         BoundingBox(Vector3 bl, Vector3 tr): bottomleft(bl), topright(tr) {}
-}
+};
 
 #endif

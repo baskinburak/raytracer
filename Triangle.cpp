@@ -41,9 +41,11 @@ BoundingBox* Triangle::getBoundingBox() {
 }
 
 Vector3 Triangle::center() {
+    if(com != NULL) return *com;
     Vector3& ver1 = vertices[v1];
     Vector3& ver2 = vertices[v2];
     Vector3& ver3 = vertices[v3];
 
-    return Vector3((ver1.X + ver2.X + ver3.X)/3, (ver1.Y + ver2.Y + ver3.Y)/3, (ver1.Z + ver2.Z + ver3.Z)/3);
+    com = new Vector3((ver1.X + ver2.X + ver3.X)/3, (ver1.Y + ver2.Y + ver3.Y)/3, (ver1.Z + ver2.Z + ver3.Z)/3)
+    return *com;
 }

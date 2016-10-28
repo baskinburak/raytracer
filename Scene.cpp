@@ -1,7 +1,10 @@
 #include "Scene.h"
 #include <map>
+#include <fstream>
+#include "Triangle.h"
+#include "Sphere.h"
 void Scene::ReadScene(int argc, char** argv) {
-    ifstream str(argv[1]);
+    std::ifstream str(argv[1]);
 
     int N;
     std::string empty;
@@ -51,17 +54,17 @@ void Scene::ReadScene(int argc, char** argv) {
     for(int i=0; i < N; i++) {
         str >> empty;
         str >> a;
-        if(str == "#Mesh") {
+        if(empty == "#Mesh") {
             str >> b; // triangle count
             str >> c; // material id;
             c = material_id_to_idx[c]; // material idx
             for(int j = 0; j < b; j++) {
-                str >> vid1 >> vid2 >> vid3; //
+                str >> vid1 >> vid2 >> vid3;
                 surfaces.push_back((Surface*)(new Triangle(vid1-1, vid2-1, vid3-1, c, &vertices)));
             }
-        } else if (str == "#Sphere") {
+        } else if (empty == "#Sphere") {
             str >> b; //material id;
-            b = material_id_to_idx[b] // material idx
+            b = material_id_to_idx[b]; // material idx
             str >> d; //radius
             str >> vid1; // center
             surfaces.push_back((Surface*)(new Sphere(vid1-1, d, b, &vertices)));
@@ -72,5 +75,5 @@ void Scene::ReadScene(int argc, char** argv) {
 }
 
 void Scene::GenerateKDTree() {
-    KDTree.generateTree(vertices, surfaces);
+    tree.generateTree(vertices, surfaces);
 }

@@ -6,11 +6,12 @@
 class Sphere : public Surface{
 
 public:
-    std::vector<Vector3>* vertices;
-    int center;
+    int cntr;
     double radius;
-    Sphere():center(-1), radius(-1), type(false), material(-1), vertices(NULL), bbox(NULL) {}
-    Sphere(int c, double r, int m, std::vector<Vector3>* vert): center(c), radius(r), type(false), material(m), vertices(vert), bbox(NULL) {}
+    Sphere():cntr(-1), radius(-1), Surface(false) {}
+    Sphere(int c, double r, int m, std::vector<Vector3>* vert): cntr(c), radius(r), Surface(false, m, NULL, vert) {}
+    BoundingBox* getBoundingBox();
+    Vector3 center();
 };
 
 

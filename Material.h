@@ -9,7 +9,7 @@ class Material {
 public:
 	LightProperty ambient;
 	LightProperty diffuse;
-	LightProperty spec;
+	LightProperty specular;
 	double specexp;
 	LightProperty reflectance;
 

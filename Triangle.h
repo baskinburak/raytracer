@@ -7,12 +7,14 @@
 class Triangle : public Surface
 {
     public:
-        std::vector<Vector3>* vertices;
+        Vector3* com;
         int v1;
         int v2;
         int v3;
-        Triangle(): v1(-1), v2(-1), v3(-1), type(true), material(-1), bbox(NULL); {}
-        Triangle(int a, int b, int c, int d, std::vector<Vector3>* vert) : v1(a), v2(b), v3(c), type(true), material(d), vertices(vert), bbox(NULL) {}
+        Triangle(): v1(-1), v2(-1), v3(-1), Surface(true), com(NULL) {}
+        Triangle(int a, int b, int c, int m, std::vector<Vector3>* vert) : v1(a), v2(b), v3(c), Surface(true, m, NULL, vert), com(NULL) {}
+        BoundingBox* getBoundingBox();
+        Vector3 center();
 
 };
 

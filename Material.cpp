@@ -1,6 +1,6 @@
 #include "Material.h"
 
 
-friend std::istream& operator>>(std::istream& stream, Material& mat) {
-    stream >> ambient >> diffuse >> specular  >> specexp >> reflectance;
+std::istream& operator>>(std::istream& stream, Material& mat) {
+    return stream >> mat.ambient >> mat.diffuse >> mat.specular  >> mat.specexp >> mat.reflectance;
 }

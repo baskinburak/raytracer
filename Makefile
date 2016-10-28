@@ -1,5 +1,16 @@
 SRC = main.cpp \
-	Image.cpp
+    BoundingBox.cpp \
+    Color.cpp \
+    Intensity.cpp \
+    KDNode.cpp \
+    KDTree.cpp \
+    LightProperty.cpp \
+    Material.cpp \
+    Scene.cpp \
+    Sphere.cpp \
+    Surface.cpp \
+    Triangle.cpp \
+    Vector3.cpp
 
 OBJ = $(SRC:.cpp=.o)
 CFLAGS = -std=c++11 -O3
