@@ -18,7 +18,8 @@ void Camera::calculateRight() {
 Ray Camera::calculateRay(int px_x, int px_y) const {
     double u = imagePlane.left + ((imagePlane.right - imagePlane.left) * (0.5 + px_x)) / imagePlane.width;
     double v = imagePlane.top - ((imagePlane.top - imagePlane.bottom) * (0.5 + px_y)) / imagePlane.height;
-    return Ray(position, Vector3(right * u + up * v + gaze * imagePlane.distance) - position);
+    Vector3 direction(right * u + up * v + gaze * imagePlane.distance);
+    return Ray(position + direction, direction);
 }
 
 Image Camera::Render(Scene* currentScene) const {
@@ -26,6 +27,7 @@ Image Camera::Render(Scene* currentScene) const {
     for(int i=0; i < imagePlane.width; i++) {
         for(int j=0; j < imagePlane.height; j++) {
             Ray ray = calculateRay(i,j);
+            ray.direction.normalize();
             img.Pixel(i,j) = (currentScene->tree).rayTrace(ray, currentScene->reflectDepth);
         }
     }
