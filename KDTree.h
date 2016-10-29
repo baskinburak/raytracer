@@ -2,6 +2,7 @@
 #define ODEV_KDTREE
 
 #include "KDNode.h"
+#include "Color.h"
 
 class KDTree {
     private:        
@@ -10,6 +11,7 @@ class KDTree {
     public:
         KDNode *root;
         void generateTree(std::vector<Vector3>& vertices, std::vector<Surface*> surfaces);
+        Color rayTrace(Ray& ray, int depth);
 };
 
 #endif

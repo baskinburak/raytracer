@@ -15,6 +15,7 @@ class Surface {
         Surface(bool t, int m, BoundingBox* bb, std::vector<Vector3>* vert) : type(t), material(m), bbox(bb), vertices(vert) {}
         virtual BoundingBox* getBoundingBox() = 0;
         virtual Vector3 center() = 0; // returns the center of mass
+        virtual bool hit(Ray& ray, struct RayHitInfo& hitinfo) = 0;
 };
 
 #endif

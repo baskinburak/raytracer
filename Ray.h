@@ -1,23 +1,16 @@
-#ifndef RAYTRACER_RAY_H
-#define RAYTRACER_RAY_H
+#ifndef ODEV_RAY
+#define ODEV_RAY
 
 #include "Material.h"
 #include "Vector3.h"
 
 class Ray {
-    Vector3 _origin;
-    Vector3 _direction;
-
 public:
-    Ray(const Vector3& origin, const Vector3& direction) : _origin(origin), _direction(direction) {}
+    Vector3 origin;
+    Vector3 direction;
+    Ray(const Vector3& o, const Vector3& d) : origin(o), direction(d) {}
+    Ray() {}
 
-    const Vector3 &Origin() const {
-        return _origin;
-    }
-
-    const Vector3 &Direction() const {
-        return _direction;
-    }
 };
 
 /////////////////
@@ -27,11 +20,13 @@ public:
 
 struct RayHitInfo
 {
-    MaterialId  Material;
-    Vector3     Position;
-    Vector3     Normal;
+    int Material;
+    Vector3 Position;
+    Vector3 Normal;
 
-    float       Parameter;
+    double      Parameter;
+
+    bool hit;
 };
 
-#endif //RAYTRACER_RAY_H
+#endif

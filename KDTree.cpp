@@ -114,3 +114,28 @@ void KDTree::generateTree(std::vector<Vector3>& vertices, std::vector<Surface*> 
     divide(root);
 
 }
+
+Color KDTree::rayTrace(Ray& ray, int depth) {
+    std::stack<KDNode*> stk;
+    stk.push(root);
+    double min_t = 0;
+    bool t_changed = false;
+    struct RayHitInfo hitinfo;
+    while(!stk.empty()) {
+        KDNode* node = stk.top();
+        stk.pop();
+        if((node->box).hit(ray)) {
+            if(node->left != NULL) {
+                stk.push(node->left);
+                stk.push(node->right);
+            } else { // this is a leaf node. do the thing.
+                for(int i=0; i < (node->surfaces).size() ; i++) {
+                    Surface* surf = (node->surfaces)[i];
+                    if(surf->hit(ray, hitinfo)) {
+                        
+                    }
+                }
+            }
+        }
+    }
+}

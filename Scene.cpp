@@ -82,7 +82,9 @@ void Scene::ReadScene(int argc, char** argv) {
     str >> N;
     cameras.resize(N);
     for(int i=0; i < N; i++) {
-        str >> cameras[i];
+        Camera* camera = new Camera();
+        str >> *camera;
+        cameras[i] = camera;
     }
     
 }
@@ -90,3 +92,5 @@ void Scene::ReadScene(int argc, char** argv) {
 void Scene::GenerateKDTree() {
     tree.generateTree(vertices, surfaces);
 }
+
+

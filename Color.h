@@ -5,12 +5,14 @@
 
 class Color {
     public:
-        int R;
-        int G;
-        int B;
-        Color(): R(0), G(0), B(0) {};
-        Color(int r, int g, int b): R(r), G(g), B(b) {}
-
+        int r;
+        int g;
+        int b;
+        Color(): r(0), g(0), b(0) {};
+        Color(int rr, int gg, int bb): r(rr), g(gg), b(bb) {}
+        int R() const { return r; }
+        int G() const { return g; }
+        int B() const { return b; }
         friend std::istream& operator>>(std::istream& stream, Color& color);
 };
 

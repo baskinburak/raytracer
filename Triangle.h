@@ -1,5 +1,5 @@
-#ifndef RAYTRACER_TRIANGLE_H
-#define RAYTRACER_TRIANGLE_H
+#ifndef ODEV_TRIANGLE
+#define ODEV_TRIANGLE
 
 #include "Surface.h"
 #include "Vector3.h"
@@ -15,8 +15,9 @@ class Triangle : public Surface
         Triangle(int a, int b, int c, int m, std::vector<Vector3>* vert) : v1(a), v2(b), v3(c), Surface(true, m, NULL, vert), com(NULL) {}
         BoundingBox* getBoundingBox();
         Vector3 center();
+        bool hit(Ray& ray, struct RayHitInfo& hitinfo);
 
 };
 
-#endif //RAYTRACER_TRIANGLE_H
+#endif
 

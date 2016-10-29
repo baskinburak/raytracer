@@ -3,16 +3,23 @@
 
 #include "Vector3.h"
 #include "Image.h"
+#include "Ray.h"
+
+class Scene;
 
 class Camera {
+    private:
+        Ray calculateRay(int px_x, int px_y) const;
+        void calculateRight();
     public:
         Vector3 position;
         Vector3 gaze;
+        Vector3 right;
         Vector3 up;
         
         struct {
-            float left, right, bottom, top;
-            float distance;
+            double left, right, bottom, top;
+            double distance;
 
             int width;
             int height;

@@ -49,3 +49,8 @@ Vector3 Triangle::center() {
     com = new Vector3((ver1.X + ver2.X + ver3.X)/3, (ver1.Y + ver2.Y + ver3.Y)/3, (ver1.Z + ver2.Z + ver3.Z)/3);
     return *com;
 }
+
+
+bool Triangle::hit(Ray& ray, struct RayHitInfo& hitinfo) {
+    return false;
+}

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "Scene.h"
+#include "Camera.h"
 
 int main(int argc, char** argv)
 {
@@ -14,9 +15,10 @@ int main(int argc, char** argv)
 
     CurrentScene.ReadScene(argc, argv);
 
-    for (const auto& camera : CurrentScene.cameras)
+    for (const auto& cam : CurrentScene.cameras)
     {
-
+        Camera camera = *cam;
+        std::cout << camera.outputFile << std::endl;
         Image img = camera.Render(&CurrentScene);
         std::ofstream out(camera.outputFile);
         out << img;

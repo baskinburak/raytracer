@@ -9,12 +9,13 @@
 #include "Vector3.h"
 #include "Material.h"
 #include "KDTree.h"
+#include "Ray.h"
 
 class Scene {
 
 public:
     std::vector<Vector3> vertices;
-    std::vector<Camera> cameras;
+    std::vector<Camera*> cameras;
     std::vector<Material> materials;
     std::vector<PointLight> lights;
     std::vector<Surface*> surfaces;
@@ -26,6 +27,7 @@ public:
     KDTree tree;
 
     void ReadScene(int argc, char** argv);
+
 
     void GenerateKDTree();
 };
