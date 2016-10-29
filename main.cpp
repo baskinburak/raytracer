@@ -21,6 +21,7 @@ int main(int argc, char** argv)
         Image img = camera.Render(&CurrentScene);
         std::ofstream out(camera.outputFile);
         out << img;
+ 
     }
 
     return 0;

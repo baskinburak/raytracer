@@ -14,36 +14,20 @@ Vector3 Vector3::operator+=(const Vector3& vect) {
 }
 
 Vector3 Vector3::operator+(const Vector3& vect) const {
-    Vector3 vec = *this;
-    vec.X += vect.X;
-    vec.Y += vect.Y;
-    vec.Z += vect.Z;
-    return vec;
+    return Vector3(X + vect.X, Y + vect.Y, Z + vect.Z);
 }
 
 Vector3 Vector3::operator-(const Vector3& vect) const {
-    Vector3 vec = *this;
-    vec.X -= vect.X;
-    vec.Y -= vect.Y;
-    vec.Z -= vect.Z;
-    return vec;
+    return Vector3(X - vect.X, Y - vect.Y, Z - vect.Z);
 }
 
 
 Vector3 Vector3::operator*(const double& val) const {
-    Vector3 vec = *this;
-    vec.X *= val;
-    vec.Y *= val;
-    vec.Z *= val;
-    return vec;
+    return Vector3(this->X * val, this->Y * val, this->Z * val);
 }
 
 Vector3 Vector3::cross(const Vector3& vec) const {
-    Vector3 res;
-    res.X = Y * vec.Z - Z * vec.Y;
-    res.Y = Z * vec.Y - X * vec.Z;
-    res.Z = X * vec.Y - Y * vec.X;
-    return res;
+    return Vector3(Y * vec.Z - Z * vec.Y, Z * vec.X - X * vec.Z, X * vec.Y - Y * vec.X);
 }
 
 void Vector3::normalize() {

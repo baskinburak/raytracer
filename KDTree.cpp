@@ -1,6 +1,7 @@
 #include "KDTree.h"
 #include <iostream>
 #include <stack>
+#include "Sphere.h"
 
 int KDTree::extendBoundingBox(BoundingBox* target, BoundingBox* source) {
     int extend_count = 0;

@@ -51,9 +51,9 @@ Vector3 Triangle::center() {
 }
 
 bool Triangle::hit(Ray& ray, struct RayHitInfo& hitinfo) {
-    Vector3 a = (*vertices)[v1];
-    Vector3 b = (*vertices)[v2];
-    Vector3 c = (*vertices)[v3];
+    Vector3& a = (*vertices)[v1];
+    Vector3& b = (*vertices)[v2];
+    Vector3& c = (*vertices)[v3];
     Vector3& d = ray.direction;
     Vector3& e = ray.origin;
 

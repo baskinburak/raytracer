@@ -13,7 +13,7 @@ Vector3 Sphere::center() {
 }
 
 bool Sphere::hit(Ray& ray, struct RayHitInfo& hitinfo) {
-    Vector3 center = (*vertices)[cntr];
+    Vector3& center = (*vertices)[cntr];
     Vector3 ec = ray.origin - center;
     double dec = ray.direction.dot(ec);
     double dd = ray.direction.dot(ray.direction);

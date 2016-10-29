@@ -6,9 +6,14 @@ std::istream& operator>>(std::istream& stream, Camera& camera) {
     int id;
     stream >> empty >> id >> camera.position >> camera.gaze >> camera.up >> camera.imagePlane.left >> camera.imagePlane.right >> camera.imagePlane.bottom >> camera.imagePlane.top >> camera.imagePlane.distance >> camera.imagePlane.width >> camera.imagePlane.height >> camera.outputFile;
 
+    std::cout << camera.up.X << " " << camera.up.Y << " " << camera.up.Z  << std::endl;
+
     camera.gaze.normalize();
+    //std::cout << "gaze:" << camera.gaze.X << " " << camera.gaze.Y << " " << camera.gaze.Z << std::endl;
     camera.up.normalize();
+   // std::cout << "up: " << camera.up.X << " " <<camera.up.Y << " " << camera.up.Z << std::endl;
     camera.calculateRight();
+    //std::cout << "right: " << camera.right.X << " " << camera.right.Y << " " << camera.right.Z << std::endl;
     return stream;
 }
 
@@ -17,8 +22,8 @@ void Camera::calculateRight() {
 }
 
 Ray Camera::calculateRay(int px_x, int px_y) const {
-    double u = imagePlane.left + ((imagePlane.right - imagePlane.left) * (0.5 + px_x)) / imagePlane.width;
-    double v = imagePlane.top - ((imagePlane.top - imagePlane.bottom) * (0.5 + px_y)) / imagePlane.height;
+    double u = imagePlane.left + ((imagePlane.right - imagePlane.left) * (0.5 + px_y)) / imagePlane.width;
+    double v = imagePlane.top - ((imagePlane.top - imagePlane.bottom) * (0.5 + px_x)) / imagePlane.height;
     Vector3 direction(right * u + up * v + gaze * imagePlane.distance);
     return Ray(position + direction, direction);
 }
