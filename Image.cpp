@@ -1,5 +1,6 @@
 #include "Image.h"
 #include <algorithm>
+#include <iostream>
 
 // This class has mostly consist of helper functions, you could use them when dealing image pixels.
 /*
@@ -60,6 +61,7 @@ Image& Image::operator=(Image rhs)
 }
 
 std::ostream &operator<<(std::ostream &os, const Image &image) {
+    std::cout << image._height << " zaa"  << std::endl;
     os << "P3" << std::endl << image._width << " " << image._height << std::endl << 255 << std::endl ;
 
     for (int i = 0; i < image._height; ++i) {

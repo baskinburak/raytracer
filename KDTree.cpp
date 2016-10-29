@@ -132,10 +132,11 @@ Color KDTree::rayTrace(Ray& ray, int depth) {
                 for(int i=0; i < (node->surfaces).size() ; i++) {
                     Surface* surf = (node->surfaces)[i];
                     if(surf->hit(ray, hitinfo)) {
-                        
+                        return Color(255,255,255);
                     }
                 }
             }
         }
     }
+    return Color(0,0,0);
 }

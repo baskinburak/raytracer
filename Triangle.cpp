@@ -50,7 +50,38 @@ Vector3 Triangle::center() {
     return *com;
 }
 
-
 bool Triangle::hit(Ray& ray, struct RayHitInfo& hitinfo) {
-    return false;
+    Vector3 a = (*vertices)[v1];
+    Vector3 b = (*vertices)[v2];
+    Vector3 c = (*vertices)[v3];
+    Vector3& d = ray.direction;
+    Vector3& e = ray.origin;
+
+    double eihf = (a.Y - c.Y) * (d.Z) - (d.Y) * (a.Z - c.Z);
+    double gfdi = (d.X) * (a.Z - c.Z) - (a.X - c.X) * (d.Z);
+    double dheg = (a.X - c.X) * (d.Y) - (d.X) * (a.Y - c.Y);
+    double akjb = (a.X - b.X) * (a.Y - e.Y) - (a.X - e.X) * (a.Y - b.Y);
+    double jcal = (a.X - e.X) * (a.Z - b.Z) - (a.X - b.X) * (a.Z - e.Z);
+    double blkc = (a.Y - b.Y) * (a.Z - e.Z) - (a.Y - e.Y) * (a.Z - b.Z);
+
+    double M = (a.X - b.X) * eihf + (a.Y - b.Y) * gfdi + (a.Z - b.Z) * dheg;
+
+    double t = ((a.Z - c.Z) * akjb + (a.Y - c.Y) * jcal + (a.X - c.X) * blkc) / -M;
+
+    if(t<=0) return false;
+
+    double gamma = ((d.Z) * akjb + (d.Y) * jcal + (d.X) * blkc) / M;
+
+    if(gamma < 0 || gamma > 1) return false;
+
+    double beta = ((a.X - e.X) * eihf + (a.Y - e.Y) * gfdi + (a.Z - e.Z) * dheg) / M;
+
+    if(beta < 0 or beta > 1-gamma) return false;
+
+    hitinfo.Parameter = t;
+    hitinfo.Material = material;
+    hitinfo.Position = ray.origin + ray.direction * t;
+    hitinfo.Normal = (b-a).cross(c-a);
+    hitinfo.Normal.normalize();
+    return true;
 }

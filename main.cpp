@@ -14,11 +14,10 @@ int main(int argc, char** argv)
     Scene CurrentScene;
 
     CurrentScene.ReadScene(argc, argv);
-
+    std::cout << "anan" << std::endl;
     for (const auto& cam : CurrentScene.cameras)
     {
         Camera camera = *cam;
-        std::cout << camera.outputFile << std::endl;
         Image img = camera.Render(&CurrentScene);
         std::ofstream out(camera.outputFile);
         out << img;

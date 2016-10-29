@@ -1,10 +1,11 @@
 #include "Camera.h"
 #include "Scene.h"
-
+#include <iostream>
 std::istream& operator>>(std::istream& stream, Camera& camera) {
     std::string empty;
     int id;
-    stream >> empty >> id >> camera.position >> camera.gaze >> camera.up >> camera.imagePlane.left >> camera.imagePlane.right >> camera.imagePlane.bottom >> camera.imagePlane.top >> camera.imagePlane.distance >> camera.imagePlane.width >> camera.imagePlane.height;
+    stream >> empty >> id >> camera.position >> camera.gaze >> camera.up >> camera.imagePlane.left >> camera.imagePlane.right >> camera.imagePlane.bottom >> camera.imagePlane.top >> camera.imagePlane.distance >> camera.imagePlane.width >> camera.imagePlane.height >> camera.outputFile;
+
     camera.gaze.normalize();
     camera.up.normalize();
     camera.calculateRight();
