@@ -25,7 +25,7 @@ bool Sphere::hit(Ray& ray, struct RayHitInfo& hitinfo) {
     hitinfo.Parameter = t;
     hitinfo.Material = material;
     hitinfo.Position = ray.origin + ray.direction * t;
-    hitinfo.Normal = Vector3(2*(hitinfo.Position.X - center.X), 2*(hitinfo.Position.Y - center.Y), 2*(hitinfo.Position.Z - center.Z));
+    hitinfo.Normal = Vector3((hitinfo.Position.X - center.X), (hitinfo.Position.Y - center.Y), (hitinfo.Position.Z - center.Z));
     hitinfo.Normal.normalize();
     return true;
 }

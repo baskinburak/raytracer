@@ -5,6 +5,8 @@
 #include "Scene.h"
 #include "PointLight.h"
 #include <algorithm>
+#include <limits>
+#include <queue>
 
 int KDTree::extendBoundingBox(BoundingBox* target, BoundingBox* source) {
     int extend_count = 0;
@@ -35,12 +37,12 @@ Vector3 centerOfMass(std::vector<Surface*>& surfaces) {
 }
 
 void KDTree::divide(KDNode* root) {
-
-    std::stack<KDNode*> stk;
-    stk.push(root);
-    while(!stk.empty()) {
-        KDNode* node = stk.top();
-        stk.pop();
+    std::queue<KDNode*> queue;
+    queue.push(root);
+    //int leaf_count = 1;
+    while(!queue.empty()) {
+        KDNode* node = queue.front();
+        queue.pop();
         Vector3 center = centerOfMass(node->surfaces);
         KDNode* left = new KDNode();
         KDNode* right = new KDNode();
@@ -97,9 +99,12 @@ void KDTree::divide(KDNode* root) {
 
         left->box = left_box;
         right->box = right_box;
-        if(extend_count * 2 > (node->surfaces).size() || (left->surfaces).size() < 5 || (right->surfaces).size() < 5) continue;
-        stk.push(left);
-        stk.push(right);
+        //leaf_count++;
+        node->left = left;
+        node->right = right;
+        if((left->surfaces).size() < 16 || (right->surfaces).size() < 16) continue;
+        queue.push(left);
+        queue.push(right);
     }
 
 }
@@ -148,7 +153,7 @@ bool KDTree::rayTrace(Ray& ray, int depth, Scene& currentScene, Color& color, do
     stk.push(root);
     struct RayHitInfo hitinfo;
     struct RayHitInfo min_hitinfo;
-    min_hitinfo.Parameter = (1 << 31) - 1;
+    min_hitinfo.Parameter = std::numeric_limits<double>::infinity();
     bool hit_occured = false;
     while(!stk.empty()) {
         KDNode* node = stk.top();
@@ -188,7 +193,6 @@ bool KDTree::rayTrace(Ray& ray, int depth, Scene& currentScene, Color& color, do
             R += mat.diffuse.R * r_illumination * dot;
             G += mat.diffuse.G * g_illumination * dot;
             B += mat.diffuse.B * b_illumination * dot;
-
             
             Vector3 v = ray.origin - min_hitinfo.Position;
             v.normalize();
@@ -196,18 +200,17 @@ bool KDTree::rayTrace(Ray& ray, int depth, Scene& currentScene, Color& color, do
             vl.normalize();
             double spec_dot = std::pow(std::max(0.0, min_hitinfo.Normal.dot(vl)), mat.specexp);
             R += mat.specular.R * r_illumination * spec_dot;
-            G += mat.specular.G * r_illumination * spec_dot;
-            B += mat.specular.B * r_illumination * spec_dot;
-
+            G += mat.specular.G * g_illumination * spec_dot;
+            B += mat.specular.B * b_illumination * spec_dot;
+            
         }
         if((mat.reflectance.R != 0 || mat.reflectance.G != 0 || mat.reflectance.B != 0) && depth != 0) {
-            Vector3 d = ray.direction;
+            Vector3& d = ray.direction;
             d.normalize();
             Vector3 r = d - min_hitinfo.Normal * d.dot(min_hitinfo.Normal) * 2;
             Ray refl_ray(min_hitinfo.Position, r);
             Color clr;
             if(rayTrace(refl_ray, depth-1, currentScene, clr, 1e-10)) {
-                std::cout << depth<< " " << clr.r << " " << clr.r * mat.reflectance.R << " " << clr.g << " " << clr.g * mat.reflectance.G << " " << clr.b << " " << clr.b * mat.reflectance.B << std::endl;
                 R += clr.r * mat.reflectance.R;
                 G += clr.g * mat.reflectance.G;
                 B += clr.b * mat.reflectance.B;
@@ -217,4 +220,25 @@ bool KDTree::rayTrace(Ray& ray, int depth, Scene& currentScene, Color& color, do
         return true;
     }
     return false;
+}
+
+void KDTree::printTree() {
+    std::stack<KDNode*> stk;
+    stk.push(root);
+    while(!stk.empty()) {
+        KDNode* node = stk.top();
+        stk.pop();
+        if(node->left != NULL) {
+            std::cout << "left not null" << std::endl;
+            stk.push(node->left);
+            stk.push(node->right);
+        } else {
+            std::cout << "\t";
+            for(int i=0; i<node->surfaces.size(); i++) {
+                Surface* srf = node->surfaces[i];
+                std::cout << (srf->type?"Triangle":"Sphere") << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
 }

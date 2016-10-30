@@ -13,6 +13,7 @@ class KDTree {
         void generateTree(std::vector<Vector3>& vertices, std::vector<Surface*> surfaces);
         bool rayTrace(Ray& ray, int depth, Scene& currentScene, Color& color, double min_t);
         bool hits_before_1(Ray& ray);
+        void printTree();
 };
 
 #endif

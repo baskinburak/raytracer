@@ -6,7 +6,7 @@ std::istream& operator>>(std::istream& stream, Camera& camera) {
     int id;
     stream >> empty >> id >> camera.position >> camera.gaze >> camera.up >> camera.imagePlane.left >> camera.imagePlane.right >> camera.imagePlane.bottom >> camera.imagePlane.top >> camera.imagePlane.distance >> camera.imagePlane.width >> camera.imagePlane.height >> camera.outputFile;
 
-    std::cout << camera.up.X << " " << camera.up.Y << " " << camera.up.Z  << std::endl;
+   // std::cout << camera.up.X << " " << camera.up.Y << " " << camera.up.Z  << std::endl;
 
     camera.gaze.normalize();
     //std::cout << "gaze:" << camera.gaze.X << " " << camera.gaze.Y << " " << camera.gaze.Z << std::endl;
@@ -29,9 +29,10 @@ Ray Camera::calculateRay(int px_x, int px_y) const {
 }
 
 Image Camera::Render(Scene* currentScene) const {
-    std::cout << imagePlane.width << " " << imagePlane.height << std::endl;
+    //std::cout << imagePlane.width << " " << imagePlane.height << std::endl;
     Image img(imagePlane.width, imagePlane.height, currentScene->backgroundColor);
     for(int i=0; i < imagePlane.height; i++) {
+        std::cout << i << std::endl;
         for(int j=0; j < imagePlane.width; j++) {
             Ray ray = calculateRay(i,j);
             ray.direction.normalize();

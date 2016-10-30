@@ -8,7 +8,7 @@
 
 void Scene::ReadScene(int argc, char** argv) {
     // start readin scene
-    std::ifstream str(argv[1]);
+    std::fstream str(argv[1]);
 
     int N;
     std::string empty;
@@ -77,10 +77,10 @@ void Scene::ReadScene(int argc, char** argv) {
 
 
     // start reading cameras
-    std::ifstream sstr = std::ifstream(argv[2]);
+    std::fstream sstr(argv[2]);
     
     sstr >> N;
-    std::cout << N << std::endl;
+    //std::cout << N << std::endl;
     cameras.resize(N);
     for(int i=0; i < N; i++) {
         Camera* camera = new Camera();
@@ -91,6 +91,7 @@ void Scene::ReadScene(int argc, char** argv) {
 
 void Scene::GenerateKDTree() {
     tree.generateTree(vertices, surfaces);
+    //tree.printTree();
 }
 
 

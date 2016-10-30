@@ -1,5 +1,7 @@
 #include "BoundingBox.h"
+#include <algorithm>
 bool BoundingBox::hit(Ray& ray) {
+
     Vector3 a = topright;
     Vector3 b = bottomleft;
     b.Z = a.Z;

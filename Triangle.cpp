@@ -81,7 +81,10 @@ bool Triangle::hit(Ray& ray, struct RayHitInfo& hitinfo) {
     hitinfo.Parameter = t;
     hitinfo.Material = material;
     hitinfo.Position = ray.origin + ray.direction * t;
-    hitinfo.Normal = (b-a).cross(c-a);
-    hitinfo.Normal.normalize();
+    if(normal == NULL) {
+        normal = new Vector3((b-a).cross(c-a));
+        (*normal).normalize();
+    }
+    hitinfo.Normal = *normal;
     return true;
 }
