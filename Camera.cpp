@@ -32,7 +32,7 @@ Image Camera::Render(Scene* currentScene) const {
     //std::cout << imagePlane.width << " " << imagePlane.height << std::endl;
     Image img(imagePlane.width, imagePlane.height, currentScene->backgroundColor);
     for(int i=0; i < imagePlane.height; i++) {
-        std::cout << i << std::endl;
+        //std::cout << i << std::endl;
         for(int j=0; j < imagePlane.width; j++) {
             Ray ray = calculateRay(i,j);
             ray.direction.normalize();
