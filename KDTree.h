@@ -11,7 +11,8 @@ class KDTree {
     public:
         KDNode *root;
         void generateTree(std::vector<Vector3>& vertices, std::vector<Surface*> surfaces);
-        Color rayTrace(Ray& ray, int depth);
+        bool rayTrace(Ray& ray, int depth, Scene& currentScene, Color& color, double min_t);
+        bool hits_before_1(Ray& ray);
 };
 
 #endif

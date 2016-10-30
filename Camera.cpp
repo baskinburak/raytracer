@@ -29,12 +29,13 @@ Ray Camera::calculateRay(int px_x, int px_y) const {
 }
 
 Image Camera::Render(Scene* currentScene) const {
+    std::cout << imagePlane.width << " " << imagePlane.height << std::endl;
     Image img(imagePlane.width, imagePlane.height, currentScene->backgroundColor);
-    for(int i=0; i < imagePlane.width; i++) {
-        for(int j=0; j < imagePlane.height; j++) {
+    for(int i=0; i < imagePlane.height; i++) {
+        for(int j=0; j < imagePlane.width; j++) {
             Ray ray = calculateRay(i,j);
             ray.direction.normalize();
-            img.Pixel(i,j) = (currentScene->tree).rayTrace(ray, currentScene->reflectDepth);
+            (currentScene->tree).rayTrace(ray, currentScene->reflectDepth, *currentScene, img.Pixel(i,j), 0.0);
         }
     }
     return img;

@@ -12,7 +12,8 @@ SRC = main.cpp \
     Triangle.cpp \
     Vector3.cpp \
     Camera.cpp \
-    Image.cpp
+    Image.cpp \
+    PointLight.cpp
 
 OBJ = $(SRC:.cpp=.o)
 CFLAGS = -std=c++11 -O3

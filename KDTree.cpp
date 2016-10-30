@@ -2,6 +2,9 @@
 #include <iostream>
 #include <stack>
 #include "Sphere.h"
+#include "Scene.h"
+#include "PointLight.h"
+#include <algorithm>
 
 int KDTree::extendBoundingBox(BoundingBox* target, BoundingBox* source) {
     int extend_count = 0;
@@ -116,11 +119,9 @@ void KDTree::generateTree(std::vector<Vector3>& vertices, std::vector<Surface*> 
 
 }
 
-Color KDTree::rayTrace(Ray& ray, int depth) {
+bool KDTree::hits_before_1(Ray& ray) {
     std::stack<KDNode*> stk;
     stk.push(root);
-    double min_t = 0;
-    bool t_changed = false;
     struct RayHitInfo hitinfo;
     while(!stk.empty()) {
         KDNode* node = stk.top();
@@ -129,15 +130,91 @@ Color KDTree::rayTrace(Ray& ray, int depth) {
             if(node->left != NULL) {
                 stk.push(node->left);
                 stk.push(node->right);
-            } else { // this is a leaf node. do the thing.
+            } else {
                 for(int i=0; i < (node->surfaces).size() ; i++) {
                     Surface* surf = (node->surfaces)[i];
                     if(surf->hit(ray, hitinfo)) {
-                        return Color(255,255,255);
+                        if(hitinfo.Parameter <= 1 && hitinfo.Parameter > 1e-10) return true;
                     }
                 }
             }
         }
     }
-    return Color(0,0,0);
+    return false;
+}
+
+bool KDTree::rayTrace(Ray& ray, int depth, Scene& currentScene, Color& color, double min_t) {
+    std::stack<KDNode*> stk;
+    stk.push(root);
+    struct RayHitInfo hitinfo;
+    struct RayHitInfo min_hitinfo;
+    min_hitinfo.Parameter = (1 << 31) - 1;
+    bool hit_occured = false;
+    while(!stk.empty()) {
+        KDNode* node = stk.top();
+        stk.pop();
+        if((node->box).hit(ray)) {
+            if(node->left != NULL) {
+                stk.push(node->left);
+                stk.push(node->right);
+            } else {
+                for(int i=0; i < (node->surfaces).size() ; i++) {
+                    Surface* surf = (node->surfaces)[i];
+                    if(surf->hit(ray, hitinfo)) {
+                        if(hitinfo.Parameter <= min_hitinfo.Parameter && hitinfo.Parameter >= min_t) {
+                            min_hitinfo = hitinfo;
+                            hit_occured = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if(hit_occured) {
+        Material& mat = currentScene.materials[min_hitinfo.Material];
+        int R = mat.ambient.R * currentScene.ambientLightIntensity.R;
+        int G = mat.ambient.G * currentScene.ambientLightIntensity.G;
+        int B = mat.ambient.B * currentScene.ambientLightIntensity.B;
+        for(int i=0; i<currentScene.lights.size(); i++) {
+            PointLight& light = currentScene.lights[i];
+            Vector3 l = light.position-min_hitinfo.Position;
+            Ray light_ray(min_hitinfo.Position, l);
+            if(hits_before_1(light_ray)) continue;
+            double r_illumination = light.illumination(min_hitinfo.Position, 'R');
+            double g_illumination = light.illumination(min_hitinfo.Position, 'G');
+            double b_illumination = light.illumination(min_hitinfo.Position, 'B');
+            l.normalize();
+            double dot = std::max(0.0, min_hitinfo.Normal.dot(l));
+            R += mat.diffuse.R * r_illumination * dot;
+            G += mat.diffuse.G * g_illumination * dot;
+            B += mat.diffuse.B * b_illumination * dot;
+
+            
+            Vector3 v = ray.origin - min_hitinfo.Position;
+            v.normalize();
+            Vector3 vl = (v+l);
+            vl.normalize();
+            double spec_dot = std::pow(std::max(0.0, min_hitinfo.Normal.dot(vl)), mat.specexp);
+            R += mat.specular.R * r_illumination * spec_dot;
+            G += mat.specular.G * r_illumination * spec_dot;
+            B += mat.specular.B * r_illumination * spec_dot;
+
+        }
+        if((mat.reflectance.R != 0 || mat.reflectance.G != 0 || mat.reflectance.B != 0) && depth != 0) {
+            Vector3 d = ray.direction;
+            d.normalize();
+            Vector3 r = d - min_hitinfo.Normal * d.dot(min_hitinfo.Normal) * 2;
+            Ray refl_ray(min_hitinfo.Position, r);
+            Color clr;
+            if(rayTrace(refl_ray, depth-1, currentScene, clr, 1e-10)) {
+                std::cout << depth<< " " << clr.r << " " << clr.r * mat.reflectance.R << " " << clr.g << " " << clr.g * mat.reflectance.G << " " << clr.b << " " << clr.b * mat.reflectance.B << std::endl;
+                R += clr.r * mat.reflectance.R;
+                G += clr.g * mat.reflectance.G;
+                B += clr.b * mat.reflectance.B;
+            }
+        }
+        color = Color(std::min(255,R), std::min(255,G), std::min(255,B));
+        return true;
+    }
+    return false;
 }

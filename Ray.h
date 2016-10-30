@@ -25,8 +25,6 @@ struct RayHitInfo
     Vector3 Normal;
 
     double      Parameter;
-
-    bool hit;
 };
 
 #endif
