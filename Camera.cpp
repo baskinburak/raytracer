@@ -25,7 +25,7 @@ Ray Camera::calculateRay(int px_x, int px_y) const {
     double u = imagePlane.left + ((imagePlane.right - imagePlane.left) * (0.5 + px_y)) / imagePlane.width;
     double v = imagePlane.top - ((imagePlane.top - imagePlane.bottom) * (0.5 + px_x)) / imagePlane.height;
     Vector3 direction(right * u + up * v + gaze * imagePlane.distance);
-    return Ray(position + direction, direction);
+    return Ray(position, direction);
 }
 
 Image Camera::Render(Scene* currentScene) const {
