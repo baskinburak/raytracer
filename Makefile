@@ -2,8 +2,8 @@ SRC = main.cpp \
     BoundingBox.cpp \
     Color.cpp \
     Intensity.cpp \
-    KDNode.cpp \
-    KDTree.cpp \
+    BVHNode.cpp \
+    BVH.cpp \
     LightProperty.cpp \
     Material.cpp \
     Scene.cpp \

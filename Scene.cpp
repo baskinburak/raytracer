@@ -73,12 +73,12 @@ void Scene::ReadScene(int argc, char** argv) {
             surfaces.push_back((Surface*)(new Sphere(vid1-1, d, b, &vertices)));
         }
     }
-    GenerateKDTree();
+    GenerateBVH();
 
 
     // start reading cameras
     std::fstream sstr(argv[2]);
-    
+
     sstr >> N;
     //std::cout << N << std::endl;
     cameras.resize(N);
@@ -89,9 +89,7 @@ void Scene::ReadScene(int argc, char** argv) {
     }
 }
 
-void Scene::GenerateKDTree() {
-    tree.generateTree(vertices, surfaces);
+void Scene::GenerateBVH() {
+    bvh.generateBVH(vertices, surfaces);
     //tree.printTree();
 }
-
-

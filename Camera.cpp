@@ -36,7 +36,7 @@ Image Camera::Render(Scene* currentScene) const {
         for(int j=0; j < imagePlane.width; j++) {
             Ray ray = calculateRay(i,j);
             ray.direction.normalize();
-            (currentScene->tree).rayTrace(ray, currentScene->reflectDepth, *currentScene, img.Pixel(i,j), 0.0);
+            (currentScene->bvh).rayTrace(ray, currentScene->reflectDepth, *currentScene, img.Pixel(i,j), 0.0);
         }
     }
     return img;

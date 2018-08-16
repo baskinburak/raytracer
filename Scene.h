@@ -8,7 +8,7 @@
 #include "PointLight.h"
 #include "Vector3.h"
 #include "Material.h"
-#include "KDTree.h"
+#include "BVH.h"
 #include "Ray.h"
 
 class Scene {
@@ -24,12 +24,12 @@ public:
     Color backgroundColor;
     Intensity ambientLightIntensity;
 
-    KDTree tree;
+    BVH bvh;
 
     void ReadScene(int argc, char** argv);
 
 
-    void GenerateKDTree();
+    void GenerateBVH();
 };
 
 #endif //RAYTRACER_SCENE_H
